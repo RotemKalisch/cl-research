@@ -4,21 +4,16 @@ import numpy as np
 import mpmath as mp
 from sympy.abc import x, y, k
 
-def create_zetas_dict(start, end):
-    zetas = {}
-    for i in range(start, end):
-        zetas['zeta({})'.format(i)] = mp.zeta(i)
-    return zetas
-
-def zig_zag(n):
+def zig_zag(k):
+    mp.mp.dps = 50
     retval = 0
-    for i in range(n, 1, -1):
-        retval += ((-1) ** (n - i)) * mp.mpf(mp.zeta(i))
-    retval += (-1) ** (n-1)
+    for i in range(k, 1, -1):
+        retval += ((-1) ** (k - i)) * mp.mpf(mp.zeta(i))
+    retval += (-1) ** (k-1)
     return retval
 
-def create_zig_zag_dict(n):
-    return {'zig_zag({})'.format(n): zig_zag(n)}
+def create_zig_zag_dict(k):
+    return {'zig_zag({})'.format(k): zig_zag(k)}
 
 
 Mx = sp.Matrix([[(x ** k + (x + 1) ** k + y * ((x + 1) ** (k - 1))), ((-x ** (k - 1)) * (x + y))], [(x + 1) ** k, 0]])

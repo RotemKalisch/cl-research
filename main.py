@@ -4,6 +4,7 @@ import zig_zag
 import e
 import pi
 
+import logging
 import mpmath as mp
 import numpy as np
 from sympy.abc import x, y, k
@@ -28,12 +29,12 @@ def check_reduce(reduce):
     print(ram(powered), co_ram(powered))
 
 def calc_zig_zag(k, y, constant):
-    ram_value = evaluate_ram(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), 10000)
-    result = identify_mobius(ram_value, constant)
+    _, ram_value = mat_pow_precise(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), dps=30)
+    result = identify_mobius(ram_value, constant, 1e-30)
     return [ram_value, result]
 
 if __name__ == '__main__':
-    mp.mp.dps=100
+    logging.basicConfig(level=logging.DEBUG)
     k = 7
     y = 1
     value, result = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))

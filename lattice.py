@@ -1,5 +1,6 @@
 import itertools
 import math
+import logging
 import mpmath as mp
 import numpy as np
 import sympy as sp
@@ -43,10 +44,65 @@ def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduc
         remove_gcd(retval)
     return retval
 
+
+def mat_pow_precise(variables, matrix, step, start, dps=mp.mp.dps, initial_matrix=sp.eye(2)):
+    """
+    Function multiples matrix by itself until the difference between consequent ram values is smaller than dps.
+    """
+    logger = logging.getLogger('lattice.mat_pow_precise')
+    prev_dps = mp.mp.dps
+    mp.mp.dps = 2 * dps
+    curr = np.copy(start)
+    retval = initial_matrix
+    prev_ram = mp.mpf(0)
+    next_ram = mp.mpf(math.inf)
+    iterations = 0
+    while abs(next_ram - prev_ram) >= 10 ** (-1 * dps):
+        retval = matrix.subs(substitutions(variables, curr)) * retval
+        curr += step
+        prev_ram = next_ram
+        next_ram = ram(retval)
+        iterations += 1
+        if iterations % 1000 == 0:
+            logger.debug("mat_pow_precise: iteration {}, diff={}".format(iterations, abs(next_ram - prev_ram)))
+    # restore dps
+    mp.mp.dps = prev_dps
+    logger.debug("mat_pow_precise: finished after {} iterations".format(iterations))
+    return retval, next_ram
+
+
+def assert_ram(variables, matrix, step, start, limit, dps=mp.mp.dps, initial_matrix=sp.eye(2)):
+    """
+    Function multiples matrix by itself until |limit - ram| < dps
+    """
+    logger = logging.getLogger('lattice.assert_ram')
+    prev_dps = mp.mp.dps
+    mp.mp.dps = 2 * dps
+    curr = np.copy(start)
+    retval = initial_matrix
+    ram_value = mp.mpf(math.inf)
+    iterations = 0
+    while abs(limit - ram_value) >= 10 ** (-1 * dps):
+        retval = matrix.subs(substitutions(variables, curr)) * retval
+        curr += step
+        ram_value = ram(retval)
+        iterations += 1
+        if iterations % 1000 == 0:
+            logger.debug("assert_ram: iteration {}, diff={}".format(iterations, abs(limit - ram_value)))
+    # restore dps
+    mp.mp.dps = prev_dps
+    logger.debug("assert_ram: finished after {} iterations".format(iterations))
+    return retval, ram_value
+
+
 def ram(matrix):
+    if mp.mpf(matrix[1]) == mp.mpf(0):
+        return math.inf
     return mp.mpf(matrix[0]) / mp.mpf(matrix[1])
 
 def co_ram(matrix):
+    if mp.mpf(matrix[3]) == mp.mpf(0):
+        return math.inf
     return mp.mpf(matrix[2]) / mp.mpf(matrix[3])
 
 def check_symmetry(matrix):
@@ -77,16 +133,16 @@ def format_couple(a, b, constant_str):
 
 def format_mobius(eq, constant_str):
     numerator = format_couple(eq[0], eq[1], constant_str)
-    denominator = format_couple(eq[2], eq[3], constant_str)
+    denominator = format_couple(-1*eq[2], -1*eq[3], constant_str)
     return "({}) / ({})".format(numerator, denominator)
 
-def identify_mobius(ram_value, constant):
+def identify_mobius(ram_value, constant, tol):
     """
     identifies a relation such that ram_value = mobius(constant)
     """
     assert len(constant) == 1
     constant_value = list(constant.values())[0]
-    eq = mp.pslq([1, constant_value, ram_value, constant_value * ram_value], maxcoeff=10000, tol=1e-20)
+    eq = mp.pslq([1, constant_value, ram_value, constant_value * ram_value], maxcoeff=10000, tol=tol)
     if eq is None:
         return None
     constant_str = list(constant.keys())[0]
