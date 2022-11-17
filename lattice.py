@@ -1,8 +1,8 @@
 import itertools
 import math
-import mpmath
-import numpy
-import sympy
+import mpmath as mp
+import numpy as np
+import sympy as sp
 
 EPSILON = 1e-5
 DEFAULT_ITERATIONS=200
@@ -11,7 +11,7 @@ def dimension(variables):
     return len(variables)
 
 def step(index, n):
-    retval = numpy.zeros(n, dtype=int)
+    retval = np.zeros(n, dtype=int)
     retval[index] = 1
     return retval
 
@@ -30,8 +30,8 @@ def remove_gcd(matrix):
         matrix[i] //= gcd
 
 # Make sure that len(start) = len(step) = amount of vars in matrix
-def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduce=True, initial_matrix=sympy.eye(2)):
-    curr = numpy.copy(start)
+def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduce=True, initial_matrix=sp.eye(2)):
+    curr = np.copy(start)
     retval = initial_matrix
     while iterations > 0:
         retval = matrix.subs(substitutions(variables, curr)) * retval
@@ -44,10 +44,10 @@ def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduc
     return retval
 
 def ram(matrix):
-    return mpmath.mpf(matrix[0]) / mpmath.mpf(matrix[1])
+    return mp.mpf(matrix[0]) / mp.mpf(matrix[1])
 
 def co_ram(matrix):
-    return mpmath.mpf(matrix[2]) / mpmath.mpf(matrix[3])
+    return mp.mpf(matrix[2]) / mp.mpf(matrix[3])
 
 def check_symmetry(matrix):
     ram_val = ram(matrix)
@@ -86,7 +86,7 @@ def identify_mobius(ram_value, constant):
     """
     assert len(constant) == 1
     constant_value = list(constant.values())[0]
-    eq = mpmath.pslq([1, constant_value, ram_value, constant_value * ram_value], maxcoeff=10000, tol=1e-20)
+    eq = mp.pslq([1, constant_value, ram_value, constant_value * ram_value], maxcoeff=10000, tol=1e-20)
     if eq is None:
         return None
     constant_str = list(constant.keys())[0]
@@ -94,7 +94,7 @@ def identify_mobius(ram_value, constant):
     
 def identify_ram(constants, variables, matrix, step, start=None, iterations=DEFAULT_ITERATIONS):
     ram_value = evaluate_ram(variables, matrix, step, start, iterations)
-    return mpmath.identify(ram_value, constants)
+    return mp.identify(ram_value, constants)
 
 def identify_rams(constants, variables, matrices, start=None, iterations=DEFAULT_ITERATIONS):
     dim = min(dimension(variables), len(matrices))

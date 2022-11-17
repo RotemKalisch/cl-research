@@ -4,8 +4,8 @@ import zig_zag
 import e
 import pi
 
-import mpmath
-from numpy import array
+import mpmath as mp
+import numpy as np
 from sympy.abc import x, y, k
 
 def search_zig_zag():
@@ -28,12 +28,12 @@ def check_reduce(reduce):
     print(ram(powered), co_ram(powered))
 
 def calc_zig_zag(k, y, constant):
-    ram_value = evaluate_ram(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), numpy.array([1, y]), 10000)
+    ram_value = evaluate_ram(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), 10000)
     result = identify_mobius(ram_value, constant)
     return [ram_value, result]
 
 if __name__ == '__main__':
-    mpmath.mp.dps=100
+    mp.mp.dps=100
     k = 7
     y = 1
     value, result = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))
