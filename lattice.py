@@ -10,11 +10,8 @@ DEFAULT_ITERATIONS=200
 def dimension(variables):
     return len(variables)
 
-def origin(n):
-    return numpy.zeros(n, dtype=int)
-
 def step(index, n):
-    retval = origin(n)
+    retval = numpy.zeros(n, dtype=int)
     retval[index] = 1
     return retval
 
@@ -34,8 +31,6 @@ def remove_gcd(matrix):
 
 # Make sure that len(start) = len(step) = amount of vars in matrix
 def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduce=True, initial_matrix=sympy.eye(2)):
-    if start is None:
-        start = origin(dimension(variables))
     curr = numpy.copy(start)
     retval = initial_matrix
     while iterations > 0:
