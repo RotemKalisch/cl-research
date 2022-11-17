@@ -49,15 +49,10 @@ def mat_pow(variables, matrix, step, start, iterations=DEFAULT_ITERATIONS, reduc
     return retval
 
 def ram(matrix):
-    retval = matrix[0] / matrix[1]
-    #print(matrix)
-    #print(retval)
-    return float(retval)
+    return mpmath.mpf(matrix[0]) / mpmath.mpf(matrix[1])
 
 def co_ram(matrix):
-    retval = matrix[2] / matrix[3]
-    #print(matrix)
-    return float(retval)
+    return mpmath.mpf(matrix[2]) / mpmath.mpf(matrix[3])
 
 def check_symmetry(matrix):
     ram_val = ram(matrix)
@@ -88,7 +83,7 @@ def format_couple(a, b, constant_str):
 def format_mobius(eq, constant_str):
     numerator = format_couple(eq[0], eq[1], constant_str)
     denominator = format_couple(eq[2], eq[3], constant_str)
-    return "{} / ({})".format(numerator, denominator)
+    return "({}) / ({})".format(numerator, denominator)
 
 def identify_mobius(ram_value, constant):
     """
@@ -96,7 +91,7 @@ def identify_mobius(ram_value, constant):
     """
     assert len(constant) == 1
     constant_value = list(constant.values())[0]
-    eq = mpmath.pslq([1, constant_value, ram_value, constant_value * ram_value])
+    eq = mpmath.pslq([1, constant_value, ram_value, constant_value * ram_value], maxcoeff=10000, tol=1e-20)
     if eq is None:
         return None
     constant_str = list(constant.keys())[0]
