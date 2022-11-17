@@ -29,10 +29,10 @@ def check_reduce(reduce):
 
 def calc_zig_zag(y):
     k = 7
-    constants = zig_zag.create_zig_zag(k)
+    constant = zig_zag.create_zig_zag_dict(k)
     ram_value = evaluate_ram(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), numpy.array([1, y]), 1000)
-    result = mpmath.identify(ram_value, constants)
+    result = identify_mobius(ram_value, constant)
     return [ram_value, result]
 
 if __name__ == '__main__':
-    print(format(calc_zig_zag_dict(1)[0], '.46f'))
+    print(calc_zig_zag(1))

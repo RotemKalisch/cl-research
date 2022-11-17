@@ -78,6 +78,29 @@ def check_symmetric_limits(variables, matrices, start=None, iterations=DEFAULT_I
 def evaluate_ram(variables, matrix, step, start=None, iterations=DEFAULT_ITERATIONS):
     powered = mat_pow(variables, matrix, step, start, iterations)
     return ram(powered)
+
+def format_couple(a, b, constant_str):
+    if a == 0:
+        return "{}*{}".format(b, constant_str)
+    sign = '-' if b < 0 else '+'
+    return "{} {} {}*{}".format(a, sign, abs(b), constant_str)
+
+def format_mobius(eq, constant_str):
+    numerator = format_couple(eq[0], eq[1], constant_str)
+    denominator = format_couple(eq[2], eq[3], constant_str)
+    return "{} / ({})".format(numerator, denominator)
+
+def identify_mobius(ram_value, constant):
+    """
+    identifies a relation such that ram_value = mobius(constant)
+    """
+    assert len(constant) == 1
+    constant_value = list(constant.values())[0]
+    eq = mpmath.pslq([1, constant_value, ram_value, constant_value * ram_value])
+    if eq is None:
+        return None
+    constant_str = list(constant.keys())[0]
+    return format_mobius(eq, constant_str)
     
 def identify_ram(constants, variables, matrix, step, start=None, iterations=DEFAULT_ITERATIONS):
     ram_value = evaluate_ram(variables, matrix, step, start, iterations)
