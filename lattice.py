@@ -126,15 +126,19 @@ def evaluate_ram(variables, matrix, step, start=None, iterations=DEFAULT_ITERATI
     return ram(powered)
 
 def format_couple(a, b, constant_str):
+    if b == 0:
+        return "{}".format(a)
     if a == 0:
-        return "{}*{}".format(b, constant_str)
+        if b == 1:
+            return "{}".format(constant_str)
+        return "({}*{})".format(b, constant_str)
     sign = '-' if b < 0 else '+'
-    return "{} {} {}*{}".format(a, sign, abs(b), constant_str)
+    return "({} {} {}*{})".format(a, sign, abs(b), constant_str)
 
 def format_mobius(eq, constant_str):
     numerator = format_couple(eq[0], eq[1], constant_str)
     denominator = format_couple(-1*eq[2], -1*eq[3], constant_str)
-    return "({}) / ({})".format(numerator, denominator)
+    return "{} / {}".format(numerator, denominator)
 
 def identify_mobius(ram_value, constant, tol):
     """
