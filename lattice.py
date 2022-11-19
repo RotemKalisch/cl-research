@@ -68,7 +68,7 @@ def mat_pow_precise(variables, matrix, step, start, dps=mp.mp.dps, initial_matri
     # restore dps
     mp.mp.dps = prev_dps
     logger.debug("mat_pow_precise: finished after {} iterations".format(iterations))
-    return retval, next_ram
+    return retval
 
 
 def assert_ram(variables, matrix, step, start, limit, dps=mp.mp.dps, initial_matrix=sp.eye(2)):

@@ -29,12 +29,12 @@ def check_reduce(reduce):
     print(ram(powered), co_ram(powered))
 
 def calc_zig_zag(k, y, constant):
-    _, ram_value = mat_pow_precise(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), dps=30)
-    result = identify_mobius(ram_value, constant, 1e-30)
+    powered= mat_pow_precise(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), dps=20)
+    ram_value = ram(powered)
+    result = identify_mobius(ram_value, constant, 1e-20)
     return [ram_value, result]
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
     k = 7
     y = 1
     value, result = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))
