@@ -29,7 +29,7 @@ def check_reduce(reduce):
     print(ram(powered), co_ram(powered))
 
 def calc_zig_zag(k, y, constant):
-    powered= mat_pow_precise(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, y]), dps=20)
+    powered = mat_pow(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, 0]), 1000)
     ram_value = ram(powered)
     result = identify_mobius(ram_value, constant, 1e-20)
     return [ram_value, result]

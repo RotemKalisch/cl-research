@@ -18,18 +18,13 @@ def create_zig_zag_dict(k):
 
 Mx = sp.Matrix([[(x ** k + (x + 1) ** k + y * ((x + 1) ** (k - 1))), ((-x ** (k - 1)) * (x + y))], [(x + 1) ** k, 0]])
 
+Mx_tag = sp.Matrix([[x * ((x-1)**k + x**k + x**(k-1)), 1], [-(x+1)**2 * x**(2*k), 0]])
+
 My = sp.Matrix([[(x ** k + (x + 1) ** k), -(x ** k + (x + 1) ** k)], [x ** (k + 1), -x ** (k + 1)]])
 
 VARIABLES = [x, y]
-MATRICES = [Mx]
+MATRICES = [Mx_tag]
 START = np.array([1, 0])
 
 def matrices(n):
-    return [Mx.subs([[k, n]])]
-
-def iterations(k):
-    if k <= 3:
-        return 10000
-    if k <= 5:
-        return 1000
-    return 200
+    return [Mx_tag.subs([[k, n]])]
