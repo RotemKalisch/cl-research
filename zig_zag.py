@@ -27,7 +27,7 @@ def a(x, y, k):
 def b(x, k):
     return -4*(x**2)*(x + 1)**2
 def f(x, y, k):
-    return 2*x**2 + 2*x*y + y**2 + 2*x + y;
+    return 2*x**2 + 2*x*y + y**2 + 2*x + y
 
 Mx_1 = sp.Matrix([[a(x, y, k), b(x,k)], [1, 0]])
 My_1 = sp.Matrix([[f(x, y, k), b(x,k)], [1, -f(x, -y, k)]])
