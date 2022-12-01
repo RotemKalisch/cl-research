@@ -15,16 +15,26 @@ def zig_zag(k):
 def create_zig_zag_dict(k):
     return {'zig_zag({})'.format(k): zig_zag(k)}
 
+Mx = sp.Matrix([[(x ** k + (x + 1) ** k + y * ((x + 1) ** (k - 1))), ((-x ** (k - 1)) * (x + y))], [(x + 1) ** k, 0]]) # original matrix given by CL document
+Mx_tag = sp.Matrix([[2 * (x * ((x-1)**k + x**k + x**(k-1))), 1], [-4*(x+1)**2 * x**(2*k), 0]]) # A nice permutation that gets to 1/zig_zag(k)
+Mx_tag2 = sp.Matrix([[(x+1)*(x)**k + (x+1)**k + (x+1)**(k+1), -(x)**(2*k) * (x+1)**2], [1, 0]]) # Second attempt at ofir's research
 
-Mx = sp.Matrix([[(x ** k + (x + 1) ** k + y * ((x + 1) ** (k - 1))), ((-x ** (k - 1)) * (x + y))], [(x + 1) ** k, 0]])
+"""
+The following matrices only work for k=1
+"""
+def a(x, y, k):
+    return -2 + x**2 + (1 + x)**2 + (1 + x - y)**2 + (x + y)**2
+def b(x, k):
+    return -4 * x**2 * (x + 1)**2
+def f(x, y, k):
+    return x**(k + 1) + (x + y)**(k + 1) - 1;
 
-Mx_tag = sp.Matrix([[x * ((x-1)**k + x**k + x**(k-1)), 1], [-(x+1)**2 * x**(2*k), 0]])
-
-My = sp.Matrix([[(x ** k + (x + 1) ** k), -(x ** k + (x + 1) ** k)], [x ** (k + 1), -x ** (k + 1)]])
+Mx_1 = sp.Matrix([[a(x, y, k), 1], [b(x, k), 0]])
+My_1 = sp.Matrix([[f(x, y, k), 1], [b(x, k), -f(x, -y, k)]])
 
 VARIABLES = [x, y]
-MATRICES = [Mx_tag]
+MATRICES = [Mx_tag2]
 START = np.array([1, 0])
 
 def matrices(n):
-    return [Mx_tag.subs([[k, n]])]
+    return [matrix.subs([[k, n]]) for matrix in MATRICES]

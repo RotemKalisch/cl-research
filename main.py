@@ -29,13 +29,18 @@ def check_reduce(reduce):
     print(ram(powered), co_ram(powered))
 
 def calc_zig_zag(k, y, constant):
-    powered = mat_pow(zig_zag.VARIABLES, zig_zag.matrices(k)[0], step(0, 2), np.array([1, 0]), 1000)
-    ram_value = ram(powered)
-    result = identify_mobius(ram_value, constant, 1e-20)
-    return [ram_value, result]
+    results = []
+    matrices = zig_zag.matrices(k)
+    for i in range(len(matrices)):
+        powered = mat_pow(zig_zag.VARIABLES, matrices[i], step(i, 2), np.array([1, 1]), 1000)
+        ram_value = ram(powered)
+        result = identify_mobius(ram_value, constant, 1e-15)
+        results.append((ram_value, result))
+    return results
 
 if __name__ == '__main__':
-    k = 7
+    k = 5
     y = 1
-    value, result = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))
-    print(value, result)
+    results = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))
+    for (value, result) in results:
+        print(value, result)
