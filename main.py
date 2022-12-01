@@ -39,7 +39,7 @@ def calc_zig_zag(k, y, constant):
     return results
 
 if __name__ == '__main__':
-    k = 5
+    k = 1
     y = 1
     results = calc_zig_zag(k, y, zig_zag.create_zig_zag_dict(k))
     for (value, result) in results:

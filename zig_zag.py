@@ -23,18 +23,20 @@ Mx_tag2 = sp.Matrix([[(x+1)*(x)**k + (x+1)**k + (x+1)**(k+1), -(x)**(2*k) * (x+1
 The following matrices only work for k=1
 """
 def a(x, y, k):
-    return -2 + x**2 + (1 + x)**2 + (1 + x - y)**2 + (x + y)**2
+    return 2*(2 + 4*x + 2*x**2 - y + y**2)
 def b(x, k):
-    return -4 * x**2 * (x + 1)**2
+    return -4*(x**2)*(x + 1)**2
 def f(x, y, k):
-    return x**(k + 1) + (x + y)**(k + 1) - 1;
+    return 2*x**2 + 2*x*y + y**2 + 2*x + y;
 
-Mx_1 = sp.Matrix([[a(x, y, k), 1], [b(x, k), 0]])
-My_1 = sp.Matrix([[f(x, y, k), 1], [b(x, k), -f(x, -y, k)]])
+Mx_1 = sp.Matrix([[a(x, y, k), b(x,k)], [1, 0]])
+My_1 = sp.Matrix([[f(x, y, k), b(x,k)], [1, -f(x, -y, k)]])
+print(Mx_1)
+print(My_1)
 
 VARIABLES = [x, y]
-MATRICES = [Mx_tag2]
-START = np.array([1, 0])
+MATRICES = [Mx_1, My_1]
+START = np.array([1, 1])
 
 def matrices(n):
     return [matrix.subs([[k, n]]) for matrix in MATRICES]
