@@ -96,14 +96,14 @@ def assert_ram(variables, matrix, step, start, limit, dps=mp.mp.dps, initial_mat
 
 
 def ram(matrix):
-    if mp.mpf(matrix[1]) == mp.mpf(0):
+    if mp.mpf(matrix[2]) == mp.mpf(0):
         return math.inf
-    return mp.mpf(matrix[0]) / mp.mpf(matrix[1])
+    return mp.mpf(matrix[0]) / mp.mpf(matrix[2])
 
 def co_ram(matrix):
     if mp.mpf(matrix[3]) == mp.mpf(0):
         return math.inf
-    return mp.mpf(matrix[2]) / mp.mpf(matrix[3])
+    return mp.mpf(matrix[1]) / mp.mpf(matrix[3])
 
 def check_symmetry(matrix):
     ram_val = ram(matrix)
