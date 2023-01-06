@@ -31,6 +31,12 @@ class Lattice:
     def __str__(self):
         return str([self.Mx, self.My])
 
+    def a(self):
+        return self.a
+
+    def b(self):
+        return self.b
+
     def Mx(self):
         return self.Mx
 

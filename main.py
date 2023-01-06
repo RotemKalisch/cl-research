@@ -9,5 +9,4 @@ from lattice import *
 from known_lattices import *
 
 if __name__ == '__main__':
-    f, fbar = degree_high_degenerated(7)
-    print(eval(repr(Lattice(f, fbar))))
+    print(eval(repr(degree_high_degenerated(7))))
